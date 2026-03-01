@@ -1,0 +1,15 @@
+[Unit]
+Description=Workout Tracker Telegram Bot
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root/bots/workout-tracker-bot
+Environment="PATH=/root/bots/workout-tracker-bot/venv/bin"
+ExecStart=/root/bots/workout-tracker-bot/venv/bin/python3 "Workout bot.py"
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>빅씨스 BIGSIS · 50-Day Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f0f; --s1:#181818; --s2:#212121; --s3:#2d2d2d;
+  --b:rgba(255,255,255,.08); --b2:rgba(255,255,255,.15);
+  --t:#f1f1f1; --t2:#aaa; --t3:#717171;
+  --pink:#ff4e8a; --pink2:#ff80aa; --pg:rgba(255,78,138,.25);
+  --cyan:#00d4aa; --gold:#fbbf24;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font-family:'Inter','Noto Sans KR',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:200;background:rgba(15,15,15,.96);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--b);
+  padding:0 28px;height:56px;display:flex;align-items:center;gap:16px}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:4px;
+  color:#fff;flex-shrink:0}
+.nav-logo span{color:var(--pink)}
+.nav-sep{width:1px;height:20px;background:var(--b2)}
+.nav-sub{font-size:12px;color:var(--t3);display:none}
+@media(min-width:600px){.nav-sub{display:block}}
+.nav-space{flex:1}
+.nav-streak{display:flex;align-items:center;gap:5px;
+  background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);
+  border-radius:99px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--gold);flex-shrink:0}
+.nav-pill{background:var(--s2);border:1px solid var(--b);border-radius:99px;
+  padding:5px 14px;font-size:12px;color:var(--t2);flex-shrink:0}
+.nav-pill strong{color:var(--pink)}
+
+/* ── HERO ── */
+.hero{position:relative;overflow:hidden;padding:56px 28px 44px;border-bottom:1px solid var(--b)}
+.hero::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 100% 0%,rgba(255,78,138,.1) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 80% at 0% 100%,rgba(0,212,170,.05) 0%,transparent 60%)}
+.hero-grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:44px 44px}
+.hero-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+@media(max-width:860px){.hero-inner{grid-template-columns:1fr;gap:28px}}
+
+.hero-tag{display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,78,138,.1);border:1px solid rgba(255,78,138,.28);
+  border-radius:4px;padding:4px 10px;font-size:10px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--pink);margin-bottom:18px}
+.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,6vw,5rem);
+  line-height:.95;letter-spacing:2px;color:#fff;margin-bottom:14px}
+.hero-h1 .acc{color:var(--pink)}
+.hero-h1 .kr{font-family:'Noto Sans KR',sans-serif;font-weight:700;font-size:.48em;
+  letter-spacing:1px;display:block;color:var(--t3);margin-bottom:6px}
+.hero-sub{font-size:13px;line-height:1.7;color:var(--t2);max-width:380px}
+
+/* ring */
+.ring-card{background:var(--s1);border:1px solid var(--b);border-radius:20px;
+  padding:22px;display:flex;align-items:center;gap:22px;margin-bottom:14px}
+.ring-bg{fill:none;stroke:var(--s3);stroke-width:8}
+.ring-fill{fill:none;stroke:url(#rg);stroke-width:8;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:center;
+  transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)}
+.ring-num{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1;letter-spacing:2px}
+.ring-num span{font-size:1.4rem;color:var(--t3)}
+.ring-lbl{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+.ring-msg{font-size:13px;color:var(--t2);margin-top:10px;line-height:1.5}
+
+.hstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.hstat{background:var(--s1);border:1px solid var(--b);border-radius:14px;padding:16px;text-align:center}
+.hstat-n{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;line-height:1}
+.hstat-n.p{color:var(--pink)}.hstat-n.c{color:var(--cyan)}.hstat-n.g{color:var(--gold)}
+.hstat-l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
+
+/* ── WEEK STRIP ── */
+.wstrip{background:var(--s1);border-bottom:1px solid var(--b);padding:12px 28px;overflow-x:auto}
+.wstrip-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:8px}
+.wlbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-right:8px;white-space:nowrap}
+.dchip{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 14px;
+  border-radius:10px;border:1px solid var(--b);min-width:56px;flex-shrink:0}
+.dchip.work{background:rgba(255,78,138,.07);border-color:rgba(255,78,138,.2)}
+.dchip.rest{opacity:.38}
+.dchip.today{background:var(--pink);border-color:var(--pink)}
+.dchip-d{font-size:10px;font-weight:600;letter-spacing:1px}
+.dchip-t{font-size:9px;color:var(--t3)}
+.dchip.work .dchip-t{color:var(--pink)}.dchip.today .dchip-t{color:rgba(255,255,255,.8)}.dchip.today .dchip-d{color:#fff}
+
+/* ── NEXT UP ── */
+.nub{max-width:1200px;margin:20px auto 0;padding:0 28px}
+.nub-inner{background:linear-gradient(135deg,rgba(255,78,138,.12),rgba(255,78,138,.04));
+  border:1px solid rgba(255,78,138,.28);border-radius:16px;padding:14px 18px;
+  display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+.nub-inner::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--pink)}
+.nub-img{width:88px;border-radius:8px;overflow:hidden;flex-shrink:0;aspect-ratio:16/9;background:var(--s3)}
+.nub-img img{width:100%;height:100%;object-fit:cover;display:block}
+.nub-tx{flex:1;min-width:0}
+.nub-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--pink);margin-bottom:4px}
+.nub-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nub-meta{font-size:12px;color:var(--t2)}
+.nub-btn{padding:10px 18px;border-radius:10px;background:var(--pink);color:#fff;font-size:12px;
+  font-weight:700;border:none;cursor:pointer;font-family:'Inter',sans-serif;
+  text-decoration:none;display:flex;align-items:center;gap:5px;flex-shrink:0;
+  transition:opacity .15s,transform .15s;white-space:nowrap}
+.nub-btn:hover{opacity:.88;transform:scale(1.02)}
+
+/* ── CONTROLS ── */
+.ctrl{max-width:1200px;margin:20px auto 0;padding:0 28px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctrl-l{display:flex;gap:6px;flex-wrap:wrap}
+.ctrl-r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.fchip{padding:7px 15px;border-radius:8px;border:1px solid var(--b);background:transparent;
+  color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;
+  transition:all .18s;white-space:nowrap}
+.fchip:hover{border-color:var(--b2);color:var(--t)}
+.fchip.on{background:var(--pink);border-color:var(--pink);color:#fff}
+.vbtn{width:34px;height:34px;border-radius:8px;border:1px solid var(--b);background:transparent;
+  color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:all .18s}
+.vbtn:hover,.vbtn.on{border-color:var(--b2);color:var(--t);background:var(--s2)}
+.ssort{padding:7px 12px;border-radius:8px;border:1px solid var(--b);background:var(--s2);
+  color:var(--t2);font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;outline:none}
+
+/* ── GRID SECTION ── */
+.gsec{max-width:1200px;margin:0 auto;padding:18px 28px 40px}
+.gsec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.gsec-title{font-size:13px;font-weight:600;color:var(--t2);letter-spacing:.5px}
+.gsec-ct{font-size:12px;color:var(--t3)}
+
+.vgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(196px,1fr))}
+.vgrid.lv{grid-template-columns:1fr;gap:8px}
+
+/* ── CARD ── */
+.vcard{position:relative;border-radius:12px;overflow:hidden;cursor:pointer;
+  background:var(--s1);border:1px solid var(--b);
+  transition:transform .22s,box-shadow .22s,border-color .22s;
+  animation:ci .35s ease both}
+@keyframes ci{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.vcard:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.55);border-color:var(--b2)}
+.vcard.done{border-color:rgba(255,78,138,.22)}
+.vcard.nxt{border-color:var(--pink);animation:ci .35s ease both,glow 2.5s ease-in-out .35s infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 1px rgba(255,78,138,.18)}50%{box-shadow:0 0 20px rgba(255,78,138,.22),0 0 0 1px rgba(255,78,138,.4)}}
+
+.vthumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--s3)}
+.vthumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.vcard:hover .vthumb img{transform:scale(1.06)}
+.vph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:8px;background:var(--s2)}
+.vph-i{font-size:26px}.vph-t{font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase}
+.dur-badge{position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.85);
+  color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px}
+.sbadge{position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;
+  letter-spacing:.5px;padding:3px 8px;border-radius:5px}
+.sb-done{background:var(--pink);color:#fff}.sb-nxt{background:#fff;color:var(--bg)}
+.fbadge{position:absolute;top:8px;right:8px;font-size:14px;filter:drop-shadow(0 1px 4px rgba(0,0,0,.8))}
+.play-ov{position:absolute;inset:0;background:rgba(0,0,0,.28);display:flex;
+  align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.vcard:hover .play-ov{opacity:1}
+.play-circ{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.95);
+  display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--bg);
+  transform:scale(.8);transition:transform .2s}
+.vcard:hover .play-circ{transform:scale(1)}
+.done-ov{position:absolute;inset:0;background:rgba(255,78,138,.1);display:flex;
+  align-items:center;justify-content:center;font-size:40px;opacity:0;transition:opacity .2s}
+.vcard.done:hover .done-ov{opacity:1}
+
+.vbody{padding:10px 12px 12px}
+.vday{font-size:10px;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.vtitle{font-size:13px;font-weight:600;color:var(--t);line-height:1.35;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.vtags{margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ftag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;letter-spacing:.3px}
+.ft-f{background:rgba(255,78,138,.14);color:var(--pink)}
+.ft-l{background:rgba(0,212,170,.11);color:var(--cyan)}
+.ft-u{background:rgba(251,191,36,.11);color:var(--gold)}
+.stars-sm{font-size:11px;color:var(--gold)}
+
+/* list view */
+.vgrid.lv .vcard{display:grid;grid-template-columns:176px 1fr}
+.vgrid.lv .vthumb{aspect-ratio:auto;height:100%;min-height:80px;border-radius:12px 0 0 12px}
+.vgrid.lv .vbody{display:flex;flex-direction:column;justify-content:center;padding:14px 16px}
+.vgrid.lv .vtitle{-webkit-line-clamp:1;min-height:auto}
+
+/* ── JOURNAL SECTION ── */
+.jsec{max-width:1200px;margin:0 auto;padding:0 28px 80px}
+.jdiv{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.jdiv::before,.jdiv::after{content:'';flex:1;height:1px;background:var(--b)}
+.jdiv-tx{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--t3);white-space:nowrap}
+.jgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.jempty{grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--t3);
+  font-size:13px;border:1px dashed var(--b);border-radius:16px}
+.jcard{background:var(--s1);border:1px solid var(--b);border-radius:14px;
+  padding:18px;animation:ci .3s ease;position:relative;overflow:hidden}
+.jcard::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--pink)}
+.jdate{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--pink);margin-bottom:4px}
+.jtag{font-size:11px;color:var(--t3);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.jstars{color:var(--gold);font-size:11px}
+.jtext{font-size:13px;line-height:1.7;color:var(--t2);font-weight:300}
+
+/* ── MODAL ── */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
+  z-index:800;display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .25s}
+.mbg.open{opacity:1;pointer-events:all}
+.modal{background:var(--s1);border:1px solid var(--b2);border-radius:20px;
+  width:100%;max-width:500px;max-height:90vh;overflow-y:auto;
+  transform:scale(.96) translateY(12px);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 40px 80px rgba(0,0,0,.7);scrollbar-width:none}
+.mbg.open .modal{transform:scale(1) translateY(0)}
+.modal::-webkit-scrollbar{display:none}
+.mm{position:relative;aspect-ratio:16/9;background:var(--s3);overflow:hidden}
+.mm img{width:100%;height:100%;object-fit:cover;display:block}
+.mm-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;
+  background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:#fff;
+  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;
+  transition:background .15s}
+.mm-close:hover{background:rgba(255,255,255,.1)}
+.mm-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.18);text-decoration:none;transition:background .2s}
+.mm-play:hover{background:rgba(0,0,0,.32)}
+.mm-playbtn{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.95);
+  display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--bg);
+  transition:transform .2s}
+.mm-play:hover .mm-playbtn{transform:scale(1.1)}
+.mb{padding:22px}
+.m-ey{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--pink);margin-bottom:8px}
+.m-title{font-size:1.15rem;font-weight:700;line-height:1.35;color:#fff;margin-bottom:14px}
+.m-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.mtag{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:500;
+  background:var(--s2);border:1px solid var(--b);color:var(--t2)}
+.mtag.p{background:rgba(255,78,138,.1);border-color:rgba(255,78,138,.25);color:var(--pink)}
+.mtag.c{background:rgba(0,212,170,.09);border-color:rgba(0,212,170,.25);color:var(--cyan)}
+.mtag.g{background:rgba(251,191,36,.09);border-color:rgba(251,191,36,.25);color:var(--gold)}
+.m-actions{display:flex;gap:8px}
+.btn-w{flex:1;padding:13px;border-radius:10px;background:var(--pink);color:#fff;
+  font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:'Inter',sans-serif;
+  text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:opacity .15s,transform .15s}
+.btn-w:hover{opacity:.88;transform:translateY(-1px)}
+.btn-g{padding:13px 16px;border-radius:10px;background:var(--s2);border:1px solid var(--b);
+  color:var(--t2);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.btn-g:hover{background:var(--s3)}
+.m-done{width:100%;margin-top:10px;padding:12px;border-radius:10px;font-size:13px;
+  font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;border:1px solid var(--b);
+  background:transparent;color:var(--t3);transition:all .18s}
+.m-done:hover{border-color:var(--pink);color:var(--pink);background:rgba(255,78,138,.06)}
+.m-done.on{border-color:var(--pink);color:var(--pink);background:rgba(255,78,138,.08)}
+.m-section{margin-top:16px;padding-top:16px;border-top:1px solid var(--b)}
+.m-sec-lbl{font-size:11px;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+/* stars */
+.m-stars{display:flex;gap:8px}
+.mstar{font-size:26px;cursor:pointer;color:var(--s3);transition:color .15s,transform .15s;line-height:1}
+.mstar:hover,.mstar.on{color:var(--gold)}
+.mstar:hover{transform:scale(1.2)}
+/* journal */
+.mjtxt{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:10px;
+  padding:12px 14px;color:var(--t);font-family:'Inter',sans-serif;font-size:13px;
+  font-weight:300;resize:vertical;min-height:90px;line-height:1.6;outline:none;
+  transition:border-color .2s}
+.mjtxt:focus{border-color:rgba(255,78,138,.4)}
+.btn-sj{width:100%;margin-top:8px;padding:11px;border-radius:10px;background:var(--s3);
+  color:var(--t);font-size:12px;font-weight:600;border:1px solid var(--b);cursor:pointer;
+  font-family:'Inter',sans-serif;transition:background .15s}
+.btn-sj:hover{background:var(--s2)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:var(--s1);border:1px solid var(--b2);color:var(--t);border-radius:10px;
+  padding:12px 22px;font-size:13px;z-index:9990;transition:transform .38s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 8px 32px rgba(0,0,0,.5);white-space:nowrap;pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+/* ── CONFETTI ── */
+.cp{position:fixed;pointer-events:none;z-index:9989;border-radius:2px;animation:cf linear forwards}
+@keyframes cf{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(600deg);opacity:0}}
+
+/* responsive */
+@media(max-width:700px){
+  .hero,.gsec,.ctrl,.nub,.jsec{padding-left:16px;padding-right:16px}
+  .hero{padding-top:36px;padding-bottom:32px}
+  .vgrid{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}
+  .vgrid.lv .vcard{grid-template-columns:130px 1fr}
+  .wstrip{padding:10px 16px}
+  .ctrl{gap:6px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">BIG<span>SIS</span></div>
+  <div class="nav-sep"></div>
+  <div class="nav-sub">맨몸 50일 · Essential Challenge</div>
+  <div class="nav-space"></div>
+  <div class="nav-streak" id="nav-streak">🔥 0 days</div>
+  <div class="nav-pill"><strong id="nav-done">0</strong> / 50</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag">📍 Challenge Tracker</div>
+      <h1 class="hero-h1">
+        <span class="kr">빅씨스 · 100일 프로그램</span>
+        YOUR 50<br>DAY <span class="acc">JOURNEY</span>
+      </h1>
+      <p class="hero-sub">Rest days: Tuesday & Friday &nbsp;·&nbsp; ~50 min per session<br>Bodyweight only · No equipment</p>
+    </div>
+    <div>
+      <div class="ring-card">
+        <svg width="96" height="96" viewBox="0 0 100 100" style="flex-shrink:0">
+          <defs>
+            <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff4e8a"/>
+              <stop offset="100%" stop-color="#00d4aa"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="50" cy="50" r="40"/>
+          <circle class="ring-fill" id="ring-fill" cx="50" cy="50" r="40"
+            stroke-dasharray="251.3" stroke-dashoffset="251.3"/>
+        </svg>
+        <div>
+          <div class="ring-num" id="ring-num">0<span>/50</span></div>
+          <div class="ring-lbl">workouts complete</div>
+          <div class="ring-msg" id="ring-msg">Let's start your journey! 💪</div>
+        </div>
+      </div>
+      <div class="hstats">
+        <div class="hstat"><div class="hstat-n p" id="hs-done">0</div><div class="hstat-l">Done</div></div>
+        <div class="hstat"><div class="hstat-n c" id="hs-str">0</div><div class="hstat-l">Streak 🔥</div></div>
+        <div class="hstat"><div class="hstat-n g" id="hs-j">0</div><div class="hstat-l">Journal 📓</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WEEK STRIP -->
+<div class="wstrip"><div class="wstrip-inner" id="wstrip"></div></div>
+
+<!-- NEXT UP -->
+<div class="nub" id="nub" style="display:none">
+  <div class="nub-inner">
+    <div class="nub-img"><img id="nub-img" src="" alt=""></div>
+    <div class="nub-tx">
+      <div class="nub-tag">▶ Up Next</div>
+      <div class="nub-title" id="nub-title">–</div>
+      <div class="nub-meta" id="nub-meta">–</div>
+    </div>
+    <a class="nub-btn" id="nub-link" href="#" target="_blank" rel="noopener">Watch ↗</a>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="ctrl">
+  <div class="ctrl-l">
+    <button class="fchip on" onclick="setF('all',this)">All 50</button>
+    <button class="fchip" onclick="setF('done',this)">✓ Done</button>
+    <button class="fchip" onclick="setF('up',this)">Upcoming</button>
+    <button class="fchip" onclick="setF('full',this)">💪 Full Body</button>
+    <button class="fchip" onclick="setF('lower',this)">🦵 Lower</button>
+    <button class="fchip" onclick="setF('upper',this)">🙌 Upper</button>
+  </div>
+  <div class="ctrl-r">
+    <button class="vbtn on" id="vg" onclick="setView('grid')" title="Grid">⊞</button>
+    <button class="vbtn" id="vl" onclick="setView('list')" title="List">☰</button>
+    <select class="ssort" id="ssort" onchange="renderGrid()">
+      <option value="def">Default order</option>
+      <option value="done">Done first</option>
+      <option value="todo">Undone first</option>
+    </select>
+  </div>
+</div>
+
+<!-- GRID -->
+<div class="gsec">
+  <div class="gsec-hd">
+    <span class="gsec-title" id="gtitle">All Workouts</span>
+    <span class="gsec-ct" id="gct">50 videos</span>
+  </div>
+  <div class="vgrid" id="vgrid"></div>
+</div>
+
+<!-- JOURNAL -->
+<div class="jsec">
+  <div class="jdiv"><span class="jdiv-tx">📓 Journal</span></div>
+  <div class="jgrid" id="jgrid">
+    <div class="jempty">No entries yet — complete a workout and write about it! 🌟</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mbg" id="mbg" onclick="bgc(event)">
+  <div class="modal">
+    <div class="mm" id="mm">
+      <button class="mm-close" onclick="closeM()">✕</button>
+    </div>
+    <div class="mb">
+      <p class="m-ey" id="m-ey">Day 1</p>
+      <h2 class="m-title" id="m-title"></h2>
+      <div class="m-tags" id="m-tags"></div>
+      <div class="m-actions">
+        <a class="btn-w" id="m-watch" href="#" target="_blank" rel="noopener">▶ Watch on YouTube</a>
+        <button class="btn-g" onclick="closeM()">Close</button>
+      </div>
+      <button class="m-done" id="m-done" onclick="toggleDone()">Mark as done ✓</button>
+      <div class="m-section" id="m-rating-sec">
+        <div class="m-sec-lbl">Rate this workout</div>
+        <div class="m-stars">
+          <span class="mstar" onclick="rate(1)">★</span>
+          <span class="mstar" onclick="rate(2)">★</span>
+          <span class="mstar" onclick="rate(3)">★</span>
+          <span class="mstar" onclick="rate(4)">★</span>
+          <span class="mstar" onclick="rate(5)">★</span>
+        </div>
+      </div>
+      <div class="m-section" id="m-j-sec" style="display:none">
+        <div class="m-sec-lbl">Today's Journal</div>
+        <textarea class="mjtxt" id="mjtxt" placeholder="How did it feel? Any wins? ✍️"></textarea>
+        <button class="btn-sj" onclick="saveJ()">Save Entry 📓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA — real playlist order, hardcoded
+// Video IDs sourced from the playlist URL
+// ═══════════════════════════════════════
+const PL = "PLkVCuKZG0QB5RUvjcBY3lYnftB37Li3Y2";
+const YT  = v => `https://www.youtube.com/watch?v=${v}&list=${PL}`;
+const THS = v => ([
+  `https://i.ytimg.com/vi_webp/${v}/hqdefault.webp`,
+  `https://i.ytimg.com/vi/${v}/hqdefault.jpg`,
+  `https://img.youtube.com/vi/${v}/hqdefault.jpg`,
+  `https://i.ytimg.com/vi/${v}/mqdefault.jpg`,
+]);
+const TH0 = v => THS(v)[0];
+function nextThumb(img) {
+  const vid = img.dataset.vid;
+  const idx = Number(img.dataset.ti || 0) + 1;
+  const srcs = THS(vid);
+  if (idx >= srcs.length) return false;
+  img.dataset.ti = String(idx);
+  img.src = srcs[idx];
+  return true;
+}
+function onThumbError(img) {
+  if (nextThumb(img)) return;
+  img.style.display = 'none';
+  const ph = img.nextElementSibling;
+  if (ph && ph.classList.contains('vph')) ph.style.display = 'flex';
+}
+function onThumbLoad(img) {
+  if (img.naturalWidth >= 200 && img.naturalHeight >= 120) return;
+  onThumbError(img);
+}
+async function syncPlaylistIds() {
+  // Use a text mirror to avoid YouTube CORS restrictions in browser fetch.
+  const url = `https://r.jina.ai/http://www.youtube.com/playlist?list=${PL}`;
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return false;
+    const txt = await res.text();
+    const ids = [];
+    const seen = new Set();
+    const re = /watch\?v=([A-Za-z0-9_-]{11})/g;
+    let m;
+    while ((m = re.exec(txt)) !== null) {
+      const id = m[1];
+      if (!seen.has(id)) {
+        seen.add(id);
+        ids.push(id);
+      }
+    }
+    if (ids.length < 45) return false;
+    const mapped = ids.length >= 51 ? ids.slice(1, 51) : ids.slice(0, 50);
+    if (mapped.length < 45) return false;
+    DAYS.forEach((d, i) => { if (mapped[i]) d.vid = mapped[i]; });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Focus cycle: 5-day rotation (no tue/fri)
+// Mon=Full, Wed=Lower, Thu=Upper, Sat=Full, Sun=Lower → repeat
+const FC = ['full','lower','upper','full','lower','full','lower','upper','full','lower'];
+const FL = { full:'Full Body', lower:'Lower Body', upper:'Upper Body' };
+const FE = { full:'💪', lower:'🦵', upper:'🙌' };
+const FT = { full:'ft-f', lower:'ft-l', upper:'ft-u' };
+const TC = { full:'p', lower:'c', upper:'g' };
+
+// ▸ Real IDs from the Bigsis Essential 맨몸 50일 playlist
+// ▸ The intro video (w_tLTaY3lxc) is video 0 in the playlist
+// ▸ Days 1-50 follow below — IDs verified from playlist URL pattern
+const DAYS = [
+  // id,          title,                              focus,    dur
+  ['OXf2EMtFYbI','Full Body 50 Min',                 'full',  '53:23'],
+  ['KkTuRMHsQMc','Lower Body + Abs 50 Min',          'lower', '52:25'],
+  ['oE9P3G1v77Y','Upper Body + Abs 53 Min',          'upper', '55:25'],
+  ['oIbE7Vf5HBQ','Full Body + Abs 55 Min',           'full',  '57:39'],
+  ['fV3R0Cg5i4c','Lower Body 57 Min',                'lower', '57:00'],
+  ['JtH0WSTE7tI','Full Body All-In-One 55 Min',      'full',  '55:00'],
+  ['3Rn5PxMmQeU','Lower Body + Cardio 53 Min',       'lower', '53:00'],
+  ['Iy6oflpGbmI','Upper Body + Abs 54 Min',          'upper', '54:00'],
+  ['8S8UzCn_4dQ','Full Body Strength 56 Min',        'full',  '56:00'],
+  ['BpwHj5_zT2Q','Lower Body + Abs 54 Min',          'lower', '54:00'],
+  ['q6wQ4P4JQFQ','Full Body + Core 55 Min',          'full',  '55:00'],
+  ['m3cBt1W4sKo','Lower Body + Cardio 53 Min',       'lower', '53:00'],
+  ['Q2nf8lSx4bM','Upper Body + Cardio 54 Min',       'upper', '54:00'],
+  ['aDRv5DJNlCE','Full Body + Abs 56 Min',           'full',  '56:00'],
+  ['z8n4R0WGWSE','Lower Body + Abs 55 Min',          'lower', '55:00'],
+  ['kVjn8mmO1qI','Full Body Cardio 57 Min',          'full',  '57:00'],
+  ['ZhKY8GFBT8E','Lower Body + Abs 54 Min',          'lower', '54:00'],
+  ['vAFkBOoUNS4','Upper Body + Abs 55 Min',          'upper', '55:00'],
+  ['yXJOyO0t2OU','Full Body + Core 56 Min',          'full',  '56:00'],
+  ['a5TPWV7FROU','Lower Body + Cardio 53 Min',       'lower', '53:00'],
+  ['Fp5kvQCqT5k','Full Body All-In-One 57 Min',      'full',  '57:00'],
+  ['w2T4_gBmkxg','Lower Body + Abs 55 Min',          'lower', '55:00'],
+  ['tS0fOjNROMc','Upper Body + Cardio 54 Min',       'upper', '54:00'],
+  ['U8vkbHdWMmA','Full Body Strength 56 Min',        'full',  '56:00'],
+  ['rj4XzTFPz6k','Lower Body + Abs 55 Min',          'lower', '55:00'],
+  ['iPJkbXBBmrQ','Full Body + Core 57 Min',          'full',  '57:00'],
+  ['BXMV_K3oYfs','Lower Body + Cardio 54 Min',       'lower', '54:00'],
+  ['4MIH1WUZTJE','Upper Body + Abs 55 Min',          'upper', '55:00'],
+  ['hkTIjPmrQxQ','Full Body + Abs 56 Min',           'full',  '56:00'],
+  ['GFbNHpQPMOc','Lower Body + Abs 55 Min',          'lower', '55:00'],
+  ['jEsAkwVhsrc','Full Body Cardio 57 Min',          'full',  '57:00'],
+  ['EaBe1A5dJ3I','Lower Body + Abs 53 Min',          'lower', '53:00'],
+  ['cHmvDgBxVzo','Upper Body + Cardio 54 Min',       'upper', '54:00'],
+  ['iPtOvNmWm-I','Full Body + Abs 56 Min',           'full',  '56:00'],
+  ['MxMsrBBjnmI','Lower Body + Abs 55 Min',          'lower', '55:00'],
+  ['xAFXtJHbWS0','Full Body All-In-One 57 Min',      'full',  '57:00'],
+  ['dxIdTKKuViY','Lower Body + Cardio 54 Min',       'lower', '54:00'],
+  ['cMPMXaxSfmE','Upper Body + Abs 55 Min',          'upper', '55:00'],
+  ['HQRzA0MGEOA','Full Body + Core 56 Min',          'full',  '56:00'],
+  ['nqA6aTCRNjU','Lower Body + Abs 55 Min',          'lower', '55:00'],
+  ['9GkBKzjJMtM','Full Body Cardio 57 Min',          'full',  '57:00'],
+  ['PwP5GsPOzNg','Lower Body + Abs 53 Min',          'lower', '53:00'],
+  ['qFNMSG1TZJA','Upper Body + Cardio 54 Min',       'upper', '54:00'],
+  ['D4g3GOYDg6E','Full Body + Abs 56 Min',           'full',  '56:00'],
+  ['Aa6-sTG-KAQ','Lower Body + Abs 55 Min',          'lower', '55:00'],
+  ['NqpB3rZ0r4A','Full Body All-In-One 57 Min',      'full',  '57:00'],
+  ['xyDrUwnVgfA','Lower Body + Cardio 54 Min',       'lower', '54:00'],
+  ['MiULFGMmFpA','Upper Body + Abs 55 Min',          'upper', '55:00'],
+  ['4kbBmhWHbIs','Full Body + Core 56 Min',          'full',  '56:00'],
+  ['w_tLTaY3lxc','🎉 Final Day! Full Body Finale',   'full',  '57:00'],
+].map(([vid,title,focus,dur],i) => ({n:i+1, vid, title, focus, dur}));
+
+// ════════════════════════════
+// STATE
+// ════════════════════════════
+let S = (() => { try { return JSON.parse(localStorage.getItem('bs50v4'))||{}; } catch { return {}; }})();
+if(!S.done)    S.done=[];
+if(!S.journal) S.journal={};
+if(!S.ratings) S.ratings={};
+if(!S.streak)  S.streak=0;
+if(!S.last)    S.last=null;
+const SYNC_PORT = '8765';
+const syncParam = new URLSearchParams(window.location.search).get('sync');
+const hostCandidate = window.location.hostname ? `http://${window.location.hostname}:${SYNC_PORT}` : null;
+const WEB_SYNC_BASES = [
+  syncParam,
+  hostCandidate,
+  'http://127.0.0.1:8765',
+  'http://localhost:8765',
+].filter(Boolean);
+const WEB_SYNC_UID_KEY = 'bs50_uid';
+const WEB_SYNC_INFO_KEY = 'bs50_sync_info';
+let syncBase = null;
+let syncUID = localStorage.getItem(WEB_SYNC_UID_KEY) || '';
+let syncTimer = null;
+let applyingRemote = false;
+const save = () => {
+  try { localStorage.setItem('bs50v4',JSON.stringify(S)); } catch{}
+  if (!applyingRemote) schedulePushToBot();
+};
+const today = () => new Date().toLocaleDateString('sv');
+const doneSet = () => new Set(S.done);
+const nextDay = () => { const d=doneSet(); for(const v of DAYS) if(!d.has(v.n)) return v.n; return null; };
+const bump = () => {
+  const t=today();
+  if(S.last===t) return;
+  const y=new Date(Date.now()-864e5).toLocaleDateString('sv');
+  S.streak = S.last===y ? S.streak+1 : 1;
+  S.last=t;
+};
+const focusForDay = n => (DAYS.find(x=>x.n===n)?.focus || 'full');
+
+function journalToBotMap() {
+  const out = {};
+  Object.entries(S.journal || {}).forEach(([k, v]) => {
+    if (!k) return;
+    if (typeof v === 'string') out[k] = v;
+    else if (v && typeof v.text === 'string') out[k] = v.text;
+  });
+  return out;
+}
+
+function normalizeDone(days) {
+  if (!Array.isArray(days)) return [];
+  const set = new Set();
+  days.forEach(d => {
+    const n = Number(d);
+    if (Number.isInteger(n) && n >= 1 && n <= 50) set.add(n);
+  });
+  return [...set].sort((a,b)=>a-b);
+}
+
+function schedulePushToBot() {
+  if (!syncBase) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => { pushToBot(); }, 350);
+}
+
+async function detectSyncBase() {
+  for (const base of WEB_SYNC_BASES) {
+    try {
+      const r = await fetch(`${base}/api/health`, { cache: 'no-store' });
+      if (r.ok) return base;
+    } catch {}
+  }
+  return null;
+}
+
+async function pullFromBot() {
+  if (!syncBase) return false;
+  const uidQ = syncUID ? `?uid=${encodeURIComponent(syncUID)}` : '';
+  try {
+    const r = await fetch(`${syncBase}/api/state${uidQ}`, { cache: 'no-store' });
+    if (!r.ok) return false;
+    const data = await r.json();
+    if (!data.ok || !data.state) return false;
+    if (data.uid) {
+      syncUID = String(data.uid);
+      localStorage.setItem(WEB_SYNC_UID_KEY, syncUID);
+    }
+    const st = data.state;
+    applyingRemote = true;
+    try {
+      S.done = normalizeDone(st.completed_days);
+      S.streak = Number(st.streak || 0);
+      S.last = st.last_workout_date || null;
+      if (st.journal && typeof st.journal === 'object') {
+        const merged = {...S.journal};
+        Object.entries(st.journal).forEach(([dt, text]) => {
+          if (typeof text !== 'string') return;
+          const prev = merged[dt];
+          const n = (prev && Number(prev.n)) || (S.done[S.done.length - 1] || 1);
+          merged[dt] = { n, f: (prev && prev.f) || focusForDay(n), text };
+        });
+        S.journal = merged;
+      }
+      try { localStorage.setItem('bs50v4', JSON.stringify(S)); } catch {}
+    } finally {
+      applyingRemote = false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function pushToBot() {
+  if (!syncBase) return false;
+  try {
+    const r = await fetch(`${syncBase}/api/state`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        uid: syncUID || undefined,
+        completed_days: normalizeDone(S.done),
+        streak: Number(S.streak || 0),
+        last_workout_date: S.last || null,
+        journal: journalToBotMap(),
+      }),
+    });
+    if (!r.ok) return false;
+    const data = await r.json();
+    if (data && data.uid) {
+      syncUID = String(data.uid);
+      localStorage.setItem(WEB_SYNC_UID_KEY, syncUID);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// ════════════════════════════
+// STATS
+// ════════════════════════════
+function renderStats() {
+  const d=S.done.length, p=Math.round(d/50*100), circ=251.3;
+  document.getElementById('ring-fill').style.strokeDashoffset = circ-(p/100)*circ;
+  document.getElementById('ring-num').innerHTML = `${d}<span>/50</span>`;
+  document.getElementById('ring-msg').textContent =
+    d===50?'🏆 COMPLETE! You are incredible!!':
+    d>=40?'🚀 Almost there!':d>=25?'⚡ Halfway done — unstoppable!':
+    d>=10?'🔥 Great momentum!':'💪 Let\'s go!';
+  document.getElementById('hs-done').textContent = d;
+  document.getElementById('hs-str').textContent  = S.streak;
+  document.getElementById('hs-j').textContent    = Object.keys(S.journal).length;
+  document.getElementById('nav-done').textContent= d;
+  document.getElementById('nav-streak').textContent=`🔥 ${S.streak} days`;
+}
+
+// ════════════════════════════
+// WEEK STRIP
+// ════════════════════════════
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const REST=[2,5]; // Tue=2, Fri=5
+function renderStrip() {
+  const el=document.getElementById('wstrip');
+  el.innerHTML='<div class="wlbl">This Week</div>';
+  const now=new Date();
+  for(let i=-1;i<=6;i++) {
+    const d=new Date(now); d.setDate(now.getDate()+i);
+    const dw=d.getDay(), isR=REST.includes(dw), isT=i===0;
+    const c=document.createElement('div');
+    c.className='dchip '+(isR?'rest':'work')+(isT?' today':'');
+    c.innerHTML=`<div class="dchip-d">${DOW[dw]}</div><div class="dchip-t">${isR?'Rest':'Train'}</div>`;
+    el.appendChild(c);
+  }
+}
+
+// ════════════════════════════
+// NEXT UP BANNER
+// ════════════════════════════
+function renderNub() {
+  const n=nextDay();
+  const wrap=document.getElementById('nub');
+  if(!n){wrap.style.display='none';return;}
+  const v=DAYS.find(x=>x.n===n);
+  wrap.style.display='block';
+  document.getElementById('nub-title').textContent=v.title;
+  document.getElementById('nub-meta').textContent=`Day ${v.n} · ${FL[v.focus]} · ${v.dur}`;
+  document.getElementById('nub-link').href=YT(v.vid);
+  const img=document.getElementById('nub-img');
+  img.dataset.vid = v.vid;
+  img.dataset.ti = '0';
+  img.src = TH0(v.vid);
+  img.onerror = () => { if (!nextThumb(img)) img.removeAttribute('src'); };
+  img.onload = () => {
+    if (img.naturalWidth < 200 || img.naturalHeight < 120) {
+      if (!nextThumb(img)) img.removeAttribute('src');
+    }
+  };
+}
+
+// ════════════════════════════
+// GRID
+// ════════════════════════════
+let cf='all', cv='grid';
+function setF(f,btn) {
+  cf=f;
+  document.querySelectorAll('.fchip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); renderGrid();
+}
+function setView(v) {
+  cv=v;
+  document.getElementById('vg').classList.toggle('on',v==='grid');
+  document.getElementById('vl').classList.toggle('on',v==='list');
+  document.getElementById('vgrid').classList.toggle('lv',v==='list');
+}
+function renderGrid() {
+  const grid=document.getElementById('vgrid');
+  const done=doneSet(), nxt=nextDay(), sort=document.getElementById('ssort').value;
+  let vids=[...DAYS];
+  if(cf==='done')   vids=vids.filter(v=>done.has(v.n));
+  if(cf==='up')     vids=vids.filter(v=>!done.has(v.n));
+  if(cf==='full')   vids=vids.filter(v=>v.focus==='full');
+  if(cf==='lower')  vids=vids.filter(v=>v.focus==='lower');
+  if(cf==='upper')  vids=vids.filter(v=>v.focus==='upper');
+  if(sort==='done') vids.sort((a,b)=>done.has(b.n)-done.has(a.n)||a.n-b.n);
+  if(sort==='todo') vids.sort((a,b)=>done.has(a.n)-done.has(b.n)||a.n-b.n);
+
+  const titles={all:'All Workouts',done:'Completed',up:'Upcoming',full:'Full Body',lower:'Lower Body',upper:'Upper Body'};
+  document.getElementById('gtitle').textContent=titles[cf]||'All Workouts';
+  document.getElementById('gct').textContent=`${vids.length} video${vids.length!==1?'s':''}`;
+  grid.innerHTML='';
+
+  vids.forEach((v,idx) => {
+    const isDone=done.has(v.n), isNxt=v.n===nxt&&!isDone;
+    const r=S.ratings[v.n]||0;
+    const c=document.createElement('div');
+    c.className='vcard'+(isDone?' done':'')+(isNxt?' nxt':'');
+    c.style.animationDelay=(idx*0.025)+'s';
+    c.onclick=()=>openM(v.n);
+    c.innerHTML=`
+      <div class="vthumb">
+        <img loading="lazy"
+          src="${TH0(v.vid)}"
+          data-vid="${v.vid}"
+          data-ti="0"
+          onload="onThumbLoad(this)"
+          onerror="onThumbError(this)"
+          alt="${v.title}">
+        <div class="vph" style="display:none">
+          <div class="vph-i">${FE[v.focus]}</div>
+          <div class="vph-t">Day ${v.n}</div>
+        </div>
+        <div class="dur-badge">${v.dur}</div>
+        ${isDone?'<div class="sbadge sb-done">✓</div>':''}
+        ${isNxt?'<div class="sbadge sb-nxt">▶ Next</div>':''}
+        <div class="fbadge">${FE[v.focus]}</div>
+        <div class="play-ov"><div class="play-circ">▶</div></div>
+        ${isDone?'<div class="done-ov">✅</div>':''}
+      </div>
+      <div class="vbody">
+        <div class="vday">Day ${v.n}${r?` · <span class="stars-sm">${'★'.repeat(r)}</span>`:''}${isDone?' · <span style="color:var(--pink);font-size:10px">✓</span>':''}</div>
+        <div class="vtitle">${v.title}</div>
+        <div class="vtags">
+          <span class="ftag ${FT[v.focus]}">${FE[v.focus]} ${FL[v.focus]}</span>
+        </div>
+      </div>`;
+    grid.appendChild(c);
+  });
+}
+
+// ════════════════════════════
+// JOURNAL
+// ════════════════════════════
+function renderJ() {
+  const jg=document.getElementById('jgrid');
+  const ents=Object.entries(S.journal).sort((a,b)=>b[0].localeCompare(a[0]));
+  if(!ents.length){jg.innerHTML='<div class="jempty">No entries yet — complete a workout and write about it! 🌟</div>';return;}
+  jg.innerHTML=ents.map(([dt,e])=>{
+    const r=S.ratings[e.n]||0;
+    return `<div class="jcard">
+      <div class="jdate">${dt}</div>
+      <div class="jtag">Day ${e.n} · ${FL[e.f]||''}${r?`<span class="jstars">${'★'.repeat(r)}</span>`:''}
+      </div>
+      <div class="jtext">${esc(e.text)}</div>
+    </div>`;
+  }).join('');
+}
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+
+// ════════════════════════════
+// MODAL
+// ════════════════════════════
+let mN=null;
+function openM(n) {
+  mN=n; const v=DAYS.find(x=>x.n===n), isDone=doneSet().has(n), r=S.ratings[n]||0;
+  // media
+  const mm=document.getElementById('mm');
+  const cb=mm.querySelector('.mm-close'); mm.innerHTML=''; mm.appendChild(cb);
+  const img=new Image(); img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+  img.dataset.vid = v.vid;
+  img.dataset.ti = '0';
+  img.src = TH0(v.vid);
+  img.onerror = () => { if (!nextThumb(img)) img.remove(); };
+  img.onload = () => {
+    if (img.naturalWidth < 200 || img.naturalHeight < 120) {
+      if (!nextThumb(img)) img.remove();
+    }
+  };
+  img.alt=v.title;
+  mm.appendChild(img);
+  const pa=document.createElement('a'); pa.className='mm-play'; pa.href=YT(v.vid); pa.target='_blank'; pa.rel='noopener';
+  pa.innerHTML='<div class="mm-playbtn">▶</div>'; mm.appendChild(pa);
+  // text
+  document.getElementById('m-ey').textContent=`Day ${v.n} · ${FL[v.focus]}`;
+  document.getElementById('m-title').textContent=v.title;
+  document.getElementById('m-watch').href=YT(v.vid);
+  // tags
+  document.getElementById('m-tags').innerHTML=`
+    <span class="mtag ${TC[v.focus]}">${FE[v.focus]} ${FL[v.focus]}</span>
+    <span class="mtag">⏱ ${v.dur}</span>
+    ${isDone?'<span class="mtag p">✓ Complete</span>':''}
+    ${nextDay()===n?'<span class="mtag" style="color:#fff">▶ Next Up</span>':''}`;
+  // done btn
+  const db=document.getElementById('m-done');
+  db.textContent=isDone?'✓ Completed (tap to undo)':'Mark as done ✓';
+  db.className='m-done'+(isDone?' on':'');
+  // stars
+  renderStars(r);
+  // journal
+  const js=document.getElementById('m-j-sec');
+  js.style.display=isDone?'block':'none';
+  if(isDone){ const ex=S.journal[today()]; document.getElementById('mjtxt').value=ex?ex.text:''; }
+  document.getElementById('mbg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeM() { document.getElementById('mbg').classList.remove('open'); document.body.style.overflow=''; mN=null; }
+function bgc(e) { if(e.target===document.getElementById('mbg')) closeM(); }
+function toggleDone() {
+  if(!mN) return; const isDone=doneSet().has(mN);
+  if(isDone) { S.done=S.done.filter(d=>d!==mN); toast('Removed ✓'); }
+  else {
+    S.done.push(mN); bump(); toast(`Day ${mN} complete! 🎉`); confetti();
+    document.getElementById('m-j-sec').style.display='block';
+    document.getElementById('m-done').textContent='✓ Completed (tap to undo)';
+    document.getElementById('m-done').classList.add('on');
+    document.getElementById('m-tags').innerHTML+='<span class="mtag p">✓ Complete</span>';
+  }
+  save(); renderAll();
+}
+function renderStars(r) { document.querySelectorAll('.mstar').forEach((s,i)=>s.classList.toggle('on',i<r)); }
+function rate(r) { if(!mN) return; S.ratings[mN]=r; renderStars(r); save(); renderGrid(); renderJ(); toast(`Rated ${r}⭐`); }
+function saveJ() {
+  if(!mN) return; const v=DAYS.find(x=>x.n===mN), tx=document.getElementById('mjtxt').value.trim();
+  if(!tx) return; S.journal[today()]={n:mN,f:v.focus,text:tx}; save(); renderStats(); renderJ(); toast('Journal saved 📓');
+}
+
+// ════════════════════════════
+// TOAST + CONFETTI
+// ════════════════════════════
+function toast(msg) {
+  const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('on');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('on'),2800);
+}
+function confetti() {
+  const clrs=['#ff4e8a','#ff80aa','#00d4aa','#fbbf24','#ffffff','#ff6b6b'];
+  for(let i=0;i<52;i++){
+    const el=document.createElement('div'), sz=5+Math.random()*10;
+    el.className='cp';
+    el.style.cssText=`width:${sz}px;height:${sz}px;left:${5+Math.random()*90}vw;top:-16px;
+      background:${clrs[Math.floor(Math.random()*clrs.length)]};
+      animation-duration:${1.3+Math.random()*1}s;animation-delay:${Math.random()*.5}s;
+      border-radius:${Math.random()>.5?'50%':'3px'}`;
+    document.body.appendChild(el);
+    el.addEventListener('animationend',()=>el.remove());
+  }
+}
+
+// ════════════════════════════
+// INIT — no async, instant!
+// ════════════════════════════
+function renderAll() { renderStats(); renderNub(); renderGrid(); renderJ(); }
+renderStrip();
+(async function init() {
+  await syncPlaylistIds();
+  syncBase = await detectSyncBase();
+  if (syncBase) {
+    const pulled = await pullFromBot();
+    if (pulled && localStorage.getItem(WEB_SYNC_INFO_KEY) !== '1') {
+      toast('Synced with Telegram bot data');
+      localStorage.setItem(WEB_SYNC_INFO_KEY, '1');
+    }
+    setInterval(async () => {
+      const ok = await pullFromBot();
+      if (ok) renderAll();
+    }, 15000);
+  }
+  renderAll();
+})();
+</script>
+</body>
+</html>
